@@ -1,0 +1,19 @@
+package com.chatapp.controller;
+
+import java.util.Set;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.chatapp.config.WebSocketEventListener;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @GetMapping("/online")
+    public Set<String> getOnlineUsers() {
+        return WebSocketEventListener.getOnlineUsers();
+    }
+}

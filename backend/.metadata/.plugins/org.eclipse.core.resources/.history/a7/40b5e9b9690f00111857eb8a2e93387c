@@ -1,0 +1,33 @@
+package com.chatapp.controller;
+
+import java.time.LocalDateTime;
+
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
+
+import com.chatapp.dto.ChatMessage;
+import com.chatapp.entity.Message;
+import com.chatapp.repository.MessageRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class ChatController {
+
+    private final SimpMessagingTemplate messagingTemplate;
+    private final MessageRepository messageRepository;
+
+    @MessageMapping("/send")
+    public void sendMessage(ChatMessage chatMessage) {
+
+        Message message = new Message();
+        message.setContent(chatMessage.getContent());
+        message.setTimestamp(LocalDateTime.now());
+
+        messageRepository.save(message);
+
+        messagingTemplate.convertAndSend("/topic/general", chatMessage);
+    }
+}
